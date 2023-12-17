@@ -1,8 +1,10 @@
 import Button from "react-bootstrap/Button"
-import { useState } from "react"
+import { useRef, useState } from "react"
 
 export default function Home() {
   const [roomCode, setRoomCode] = useState("")
+  const newGameButtonRef = useRef<HTMLButtonElement | null>(null)
+  const joinGameButtonRef = useRef<HTMLButtonElement | null>(null)
 
   function createNewGame() {
     /*
@@ -29,10 +31,13 @@ export default function Home() {
         />
       </div>
       <div className="game-buttons">
-        <Button onClick={createNewGame} className="new-game-button">
+        <Button
+          ref={newGameButtonRef}
+          onClick={createNewGame}
+          className="new-game-button game-button">
           New Game
         </Button>
-        <Button onClick={joinGame} className="join-game-button">
+        <Button ref={joinGameButtonRef} onClick={joinGame} className="join-game-button game-button">
           Join Game
         </Button>
       </div>
