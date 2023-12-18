@@ -1,17 +1,23 @@
 import Button from "react-bootstrap/Button"
-import { useRef, useState } from "react"
+import { useRef } from "react"
+import { useSearchParams } from "react-router-dom"
 
 export default function Home() {
-  const [roomCode, setRoomCode] = useState("")
-  const newGameButtonRef = useRef<HTMLButtonElement | null>(null)
-  const joinGameButtonRef = useRef<HTMLButtonElement | null>(null)
+  const [searchParams, setSearchParams] = useSearchParams({ roomCode: "" })
+  const roomCodeRef = useRef<HTMLInputElement | null>(null)
+  const roomCode = searchParams.get("roomCode")
 
   function createNewGame() {
+    if (!roomCodeRef.current) return
+    roomCodeRef.current.value = ""
+
     /*
     to={`/new-game/${roomCode}`}
     */
   }
   function joinGame() {
+    if (!roomCodeRef.current) return
+    roomCodeRef.current.value = ""
     /*
     to={`/join-game/${roomCode}`}
     */
@@ -24,20 +30,23 @@ export default function Home() {
         <p>Start a new game or join an existing one.</p>
         <input
           type="text"
-          value={roomCode}
-          onChange={(e) => setRoomCode(e.target.value)}
+          ref={roomCodeRef}
+          value={roomCode || ""}
+          onChange={(e) =>
+            setSearchParams((prev) => {
+              prev.set("roomCode", e.target.value)
+              return prev
+            })
+          }
           placeholder="Enter room code"
           className="room-code-input"
         />
       </div>
       <div className="game-buttons">
-        <Button
-          ref={newGameButtonRef}
-          onClick={createNewGame}
-          className="new-game-button game-button">
+        <Button onClick={createNewGame} className="new-game-button game-button">
           New Game
         </Button>
-        <Button ref={joinGameButtonRef} onClick={joinGame} className="join-game-button game-button">
+        <Button onClick={joinGame} className="join-game-button game-button">
           Join Game
         </Button>
       </div>
